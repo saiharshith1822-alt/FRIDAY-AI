@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080817">
+<title>F.R.I.D.A.Y. AI</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;min-height:100vh;
+ background:radial-gradient(circle,#29204d,#090b1d 65%,#03040b);
+ color:#e8e5ff;font-family:Arial,sans-serif;
+}
+header{
+ padding:20px;display:flex;justify-content:space-between;
+ border-bottom:1px solid #6250a0;
+}
+.logo{font-size:21px;letter-spacing:5px;color:#c8aaff;font-weight:bold}
+.status{font-size:11px;color:#69fbd0}
+main{max-width:600px;margin:auto;padding:18px}
+h1{text-align:center;letter-spacing:8px;color:#c9b1ff}
+.sub{text-align:center;font-size:10px;letter-spacing:4px;color:#aaa0d0}
+.reactor{height:280px;display:grid;place-items:center}
+.orb{
+ width:155px;height:155px;border-radius:50%;
+ display:grid;place-items:center;
+ background:radial-gradient(circle,#fff 0%,#c5b4ff 8%,#7151d5 30%,#151b49 68%,transparent 72%);
+ box-shadow:0 0 30px #9d7aff,0 0 90px #6348c5;
+ position:relative;animation:pulse 3s infinite;
+}
+.orb:before,.orb:after{
+ content:"";position:absolute;border-radius:50%;
+ border:2px solid transparent;
+}
+.orb:before{
+ inset:-17px;border-top-color:#d5baff;
+ border-bottom-color:#67dcff;
+ animation:spin 7s linear infinite;
+}
+.orb:after{
+ inset:-32px;border-left-color:#a28aff;
+ border-right-color:#58dfff;
+ animation:reverse 10s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes reverse{to{transform:rotate(-360deg)}}
+@keyframes pulse{50%{filter:brightness(1.5);transform:scale(1.04)}}
+.orb span{font-size:12px;letter-spacing:3px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.panel{
+ background:#17172e;border:1px solid #65529c;
+ padding:14px;border-radius:9px;
+}
+.panel h3{font-size:10px;letter-spacing:2px;color:#c6a9ff}
+.panel p{font-size:12px;color:#83e9df}
+.console{
+ margin-top:17px;background:#101329;
+ border:1px solid #6854a3;border-radius:9px;padding:15px;
+}
+.console h3{font-size:11px;letter-spacing:3px;color:#c9aaff}
+#messages{min-height:65px;font-size:14px;line-height:1.6}
+.inputrow{display:flex;gap:7px}
+input{
+ min-width:0;flex:1;padding:12px;background:#20213d;
+ color:white;border:1px solid #7561b2;border-radius:6px;
+}
+button{
+ padding:12px;background:#55418f;color:white;
+ border:1px solid #b19aff;border-radius:6px;
+ font-weight:bold;
+}
+.controls{display:flex;justify-content:center;gap:12px;margin:16px 0}
+footer{text-align:center;padding:20px;color:#8883ad;font-size:10px;letter-spacing:3px}
+</style>
+</head>
+
+<body>
+<header>
+ <div class="logo">F.R.I.D.A.Y.</div>
+ <div class="status">● SYSTEM ONLINE</div>
+</header>
+
+<main>
+ <h1>FRIDAY</h1>
+ <div class="sub">PERSONAL AI ASSISTANT</div>
+
+ <div class="reactor">
+  <div class="orb"><span>F R I D A Y</span></div>
+ </div>
+
+ <div class="grid">
+  <div class="panel">
+   <h3>CORE SYSTEM</h3>
+   <p>● ONLINE</p>
+  </div>
+  <div class="panel">
+   <h3>LOCAL TIME</h3>
+   <p id="clock">Loading...</p>
+  </div>
+  <div class="panel">
+   <h3>VOICE MODULE</h3>
+   <p id="voiceStatus">STANDBY</p>
+  </div>
+  <div class="panel">
+   <h3>AI NETWORK</h3>
+   <p>CONNECTION PENDING</p>
+  </div>
+ </div>
+
+ <div class="console">
+  <h3>FRIDAY COMMAND CENTER</h3>
+  <div id="messages">
+   FRIDAY: Hello Sir. I am FRIDAY. All interface systems are operational.
+  </div>
+  <div class="inputrow">
+   <input id="command" placeholder="Enter your command...">
+   <button onclick="sendCommand()">SEND</button>
+  </div>
+ </div>
+
+ <div class="controls">
+  <button onclick="listen()">🎙 SPEAK</button>
+  <button onclick="introduce()">INTRODUCE</button>
+ </div>
+
+ <footer>F.R.I.D.A.Y. // PERSONAL ASSISTANT</footer>
+</main>
+
+<script>
+function clock(){
+ document.getElementById("clock").textContent=
+ new Date().toLocaleTimeString();
+}
+setInterval(clock,1000);
+clock();
+
+function say(text){
+ document.getElementById("messages").textContent="FRIDAY: "+text;
+ const speech=new SpeechSynthesisUtterance(text);
+ speech.lang="en-US";
+ speech.rate=0.95;
+ speech.pitch=1.05;
+ speechSynthesis.cancel();
+ speechSynthesis.speak(speech);
+}
+
+function introduce(){
+ say("Hello Sir. I am Friday, your personal AI assistant. My interface systems are online and I am ready for your commands.");
+}
+
+function sendCommand(){
+ const input=document.getElementById("command");
+ const command=input.value.trim().toLowerCase();
+ if(!command)return;
+
+ if(command.includes("hello")){
+  say("Hello Sir. How can I assist you?");
+ }
+ else if(command.includes("time")){
+  say("The current time is "+new Date().toLocaleTimeString());
+ }
+ else if(command.includes("date")){
+  say("Today is "+new Date().toDateString());
+ }
+ else if(command.includes("introduce")){
+  introduce();
+ }
+ else if(command.includes("youtube")){
+  say("Opening YouTube.");
+  window.open("https://www.youtube.com","_blank");
+ }
+ else if(command.includes("google")){
+  say("Opening Google.");
+  window.open("https://www.google.com","_blank");
+ }
+ else{
+  say("Command received. My advanced AI brain will be connected in the next development phase.");
+ }
+ input.value="";
+}
+
+document.getElementById("command").addEventListener("keydown",e=>{
+ if(e.key==="Enter")sendCommand();
+});
+
+function listen(){
+ const Recognition=window.SpeechRecognition||
+ window.webkitSpeechRecognition;
+
+ if(!Recognition){
+  say("Voice recognition is not supported in this browser.");
+  return;
+ }
+
+ const recognition=new Recognition();
+ recognition.lang="en-US";
+ recognition.interimResults=false;
+ document.getElementById("voiceStatus").textContent="LISTENING";
+
+ recognition.onresult=e=>{
+  document.getElementById("command").value=
+  e.results[0][0].transcript;
+  sendCommand();
+ };
+
+ recognition.onerror=()=>{
+  document.getElementById("voiceStatus").textContent="STANDBY";
+ };
+
+ recognition.onend=()=>{
+  document.getElementById("voiceStatus").textContent="STANDBY";
+ };
+
+ recognition.start();
+}
+</script>
+</body>
+</html>
